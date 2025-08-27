@@ -25,10 +25,10 @@ class PrepareBaseModel:
                             learning_rate):
         if freeze_all:
             for layer in model.layers:
-                model.trainable = False
+                layer.trainable = False
         elif (freeze_till is not None) and (freeze_till > 0):
             for layer in model.layers[:freeze_till]:
-                model.trainable = False
+                layer.trainable = False
 
         flatten_in = tf.keras.layers.Flatten()(model.output)
         prediction = tf.keras.layers.Dense(
@@ -41,11 +41,11 @@ class PrepareBaseModel:
             outputs=prediction
         )
 
-        full_model.compile(
+        """full_model.compile(
             optimizer=tf.keras.optimizers.SGD(learning_rate=learning_rate),
             loss=tf.keras.losses.CategoricalCrossentropy(),
             metrics=['accuracy']
-        )
+        )"""
 
         full_model.summary()
         return full_model
@@ -64,4 +64,4 @@ class PrepareBaseModel:
 
     @staticmethod
     def save_model(path: Path, model: tf.keras.Model):
-        model.save(path)
+        model.save(path, include_optimizer=False)
