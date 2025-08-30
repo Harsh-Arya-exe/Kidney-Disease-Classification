@@ -1,7 +1,8 @@
 from kidney_disease_classifier.utils.common import (read_yaml,
                                                     create_directories)
 from kidney_disease_classifier.entity.config_entity import (
-    DataIngestionConfig, PrepareBaseModelConfig, TrainingConfig)
+    DataIngestionConfig, PrepareBaseModelConfig, TrainingConfig,
+    EvaluationConfig)
 from kidney_disease_classifier.constants import (CONFIG_FILE_PATH,
                                                  PARAMS_FILE_PATH)
 from pathlib import Path
@@ -56,8 +57,8 @@ class ConfigurationManager:
         params = self.params
         prepare_base_model = self.config.prepare_base_model
         training_data = os.path.join(self.config.data_ingestion.unzip_dir, 'CT\
-                                     -KIDNEY-DATASET-Normal-Cyst-Tumor-Stone/CT-\
-                                     KIDNEY-DATASET-Normal-Cyst-Tumor-Stone')
+-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone/CT-\
+KIDNEY-DATASET-Normal-Cyst-Tumor-Stone')
         print("parmas: ", params.AUGMENTATION)
 
         training_config = TrainingConfig(
@@ -74,3 +75,19 @@ class ConfigurationManager:
         )
 
         return training_config
+
+    def get_evaluation_config(self) -> EvaluationConfig:
+        eval_config = EvaluationConfig(
+            path_of_model="artifacts/training/model.h5",
+            training_data="D:\\Kidney-Disease-Classification\\artifacts\\\
+data_ingestion\\CT-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone\\CT\
+-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone",
+            all_params=self.params,
+            mlflow_uri="https://dagshub.com/hars\
+h.arya1004/Kidney-Disease-Classification.mlflow",
+            params_image_size=self.params.IMAGE_SIZE,
+            params_batch_size=self.params.BATCH_SIZE,
+        )
+
+        print("mlflow uri in configuration file: ", eval_config.mlflow_uri)
+        return eval_config
