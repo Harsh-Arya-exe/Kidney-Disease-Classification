@@ -2,6 +2,7 @@ import tensorflow as tf
 from kidney_disease_classifier.entity.config_entity import (
     TrainingConfig)
 from pathlib import Path
+import shutil
 
 
 class Training:
@@ -23,7 +24,7 @@ class Training:
     def train_valid_generator(self):
         datagenerator_kwargs = dict(
             rescale=1./255,
-            validation_split=0.20  
+            validation_split=0.20
         )
 
         dataflow_kwargs = dict(
@@ -87,3 +88,9 @@ class Training:
         )
 
         self.save_model(path=self.config.trained_model_path, model=self.model)
+        # project_root = "Kidney-Disease-Classification"
+        src = Path("artifacts/training/model.h5")
+        dst_dir = Path("models")
+        dst_file = Path("models/model.h5")
+        dst_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, dst_file)
